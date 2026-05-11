@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>90 Jours - Compteur de territoire</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: radial-gradient(circle at 20% 30%, #0a0f1e, #05070f);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animations de particules d'arrière-plan */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 40% 50%, rgba(59,130,246,0.08) 0%, transparent 50%);
+            animation: rotate 30s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Carte principale */
+        .card {
+            position: relative;
+            background: rgba(15, 25, 35, 0.35);
+            backdrop-filter: blur(16px) saturate(180%);
+            border-radius: 2.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 2.2rem;
+            max-width: 550px;
+            width: 100%;
+            box-shadow: 0 30px 50px -20px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255,255,255,0.08);
+            transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            animation: fadeSlideUp 0.6s ease-out;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(59, 130, 246, 0.3);
+            box-shadow: 0 40px 60px -20px rgba(0, 0, 0, 0.8);
+        }
+
+        @keyframes fadeSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Titre avec icône animée */
+        h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 0.5rem;
+        }
+
+        .title-gradient {
+            background: linear-gradient(135deg, #ffffff, #a5b4fc, #60a5fa);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .plane-icon {
+            display: inline-block;
+            animation: float 3s ease-in-out infinite;
+            font-size: 2rem;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .sub {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            border-left: 3px solid #3b82f6;
+            padding-left: 1rem;
+            font-weight: 400;
+            backdrop-filter: blur(4px);
+        }
+
+        /* Zone de sélection date */
+        .date-picker {
+            margin-bottom: 2rem;
+        }
+
+        label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255,255,255,0.8);
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 0.75rem;
+            letter-spacing: 0.3px;
+        }
+
+        input {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            background: rgba(10, 20, 30, 0.6);
+            border: 1.5px solid rgba(255, 255, 255, 0.15);
+            border-radius: 1.5rem;
+            color: white;
+            font-size: 1rem;
+            font-family: monospace;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        input:hover {
+            border-color: rgba(59, 130, 246, 0.6);
+            background: rgba(10, 20, 30, 0.8);
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+        }
+
+        /* Grille des compteurs */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(8px);
+            border-radius: 1.5rem;
+            padding: 1.2rem;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.06);
+            transition: all 0.2s;
+        }
+
+        .stat-card:hover {
+            border-color: rgba(59,130,246,0.3);
+            background: rgba(0,0,0,0.4);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #94a3b8;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #f1f5f9, #cbd5e1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            line-height: 1;
+        }
+
+        .stat-unit {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        /* Carte centrale des 90 jours */
+        .ninety-card {
+            background: linear-gradient(135deg, rgba(59,130,246,0.15), rgba(37,99,235,0.05));
+            border-radius: 1.5rem;
+            padding: 1.2rem;
+            margin: 1rem 0 1.5rem;
+            text-align: center;
+            border: 1px solid rgba(59,130,246,0.3);
+            backdrop-filter: blur(4px);
+        }
+
+        .ninety-label {
+            font-size: 0.8rem;
+            color: #93c5fd;
+            letter-spacing: 1px;
+        }
+
+        .ninety-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: white;
+            margin-top: 0.25rem;
+        }
+
+        .warning {
+            color: #facc15;
+        }
+
+        .danger {
+            color: #ef4444;
+        }
+
+        .success {
+            color: #4ade80;
+        }
+
+        hr {
+            border: none;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            margin: 1rem 0;
+        }
+
+        .info {
+            text-align: center;
+            font-size: 0.7rem;
+            color: #475569;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>
+            <span class="plane-icon">✈️</span>
+            <span class="title-gradient">90 Jours</span>
+        </h1>
+        <div class="sub">Compteur de sortie de territoire • Règle des 90 jours</div>
+
+        <div class="date-picker">
+            <label>📅 Date de départ (sortie)</label>
+            <input type="date" id="exitDate" value="2026-02-17">
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Jours hors territoire</div>
+                <div class="stat-value" id="daysOut">—</div>
+                <div class="stat-unit">jours</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Jours restants</div>
+                <div class="stat-value" id="daysLeft">—</div>
+                <div class="stat-unit">avant 90j</div>
+            </div>
+        </div>
+
+        <div class="ninety-card" id="ninetyCard">
+            <div class="ninety-label">📆 Date limite des 90 jours</div>
+            <div class="ninety-value" id="limitDate">—</div>
+            <div class="ninety-label" id="statusMessage" style="margin-top: 8px;">&nbsp;</div>
+        </div>
+
+        <hr>
+        <div class="info">
+            ⚡ Mise à jour automatique • Sauvegarde locale • Ne pas dépasser 90 jours
+        </div>
+    </div>
+
+    <script>
+        function formatDateYMD(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function formatDateFR(date) {
+            return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+        }
+
+        function calculateAndDisplay() {
+            const exitDateInput = document.getElementById('exitDate').value;
+            if (!exitDateInput) return;
+
+            const exitDate = new Date(exitDateInput);
+            const today = new Date();
+            
+            // Remise à zéro des heures pour éviter les décalages
+            exitDate.setHours(0, 0, 0, 0);
+            today.setHours(0, 0, 0, 0);
+            
+            // Calcul des jours hors territoire
+            const diffTime = today - exitDate;
+            const daysOut = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            
+            // Calcul de la date limite (exitDate + 90 jours)
+            const limitDate = new Date(exitDate);
+            limitDate.setDate(exitDate.getDate() + 90);
+            
+            // Jours restants ou dépassement
+            const todayTime = today.getTime();
+            const limitTime = limitDate.getTime();
+            let daysLeft = Math.floor((limitTime - todayTime) / (1000 * 60 * 60 * 24));
+            
+            // Affichage des jours hors territoire
+            const daysOutElem = document.getElementById('daysOut');
+            const daysLeftElem = document.getElementById('daysLeft');
+            const limitDateElem = document.getElementById('limitDate');
+            const statusMsgElem = document.getElementById('statusMessage');
+            const ninetyCard = document.getElementById('ninetyCard');
+            
+            // Jours hors territoire (toujours >=0 si date passée)
+            if (daysOut >= 0) {
+                daysOutElem.textContent = daysOut;
+            } else {
+                daysOutElem.textContent = '0';
+            }
+            
+            // Gestion des 90 jours
+            if (daysLeft > 0) {
+                daysLeftElem.textContent = daysLeft;
+                daysLeftElem.style.color = '#a5f3fc';
+                statusMsgElem.innerHTML = '✅ Dans les temps • Tu peux rester encore';
+                statusMsgElem.className = 'ninety-label success';
+                ninetyCard.style.borderColor = 'rgba(74, 222, 128, 0.5)';
+            } else if (daysLeft === 0) {
+                daysLeftElem.textContent = '0';
+                daysLeftElem.style.color = '#facc15';
+                statusMsgElem.innerHTML = '⚠️ Dernier jour • Attention';
+                statusMsgElem.className = 'ninety-label warning';
+                ninetyCard.style.borderColor = 'rgba(250, 204, 21, 0.7)';
+            } else {
+                const overDays = Math.abs(daysLeft);
+                daysLeftElem.textContent = `-${overDays}`;
+                daysLeftElem.style.color = '#f87171';
+                statusMsgElem.innerHTML = `🔴 DÉPASSEMENT • ${overDays} jour(s) au-delà des 90j`;
+                statusMsgElem.className = 'ninety-label danger';
+                ninetyCard.style.borderColor = 'rgba(239, 68, 68, 0.8)';
+            }
+            
+            // Affichage date limite
+            limitDateElem.textContent = formatDateFR(limitDate);
+            
+            // Ajout d'une classe de style sur le nombre de jours hors territoire selon danger
+            if (daysLeft < 0) {
+                daysOutElem.style.background = 'linear-gradient(135deg, #ef4444, #b91c1c)';
+                daysOutElem.style.webkitBackgroundClip = 'text';
+                daysOutElem.style.backgroundClip = 'text';
+            } else if (daysLeft < 15) {
+                daysOutElem.style.background = 'linear-gradient(135deg, #facc15, #eab308)';
+                daysOutElem.style.webkitBackgroundClip = 'text';
+                daysOutElem.style.backgroundClip = 'text';
+            } else {
+                daysOutElem.style.background = 'linear-gradient(135deg, #f1f5f9, #cbd5e1)';
+                daysOutElem.style.webkitBackgroundClip = 'text';
+                daysOutElem.style.backgroundClip = 'text';
+            }
+        }
+        
+        // Initialisation avec sauvegarde locale
+        function init() {
+            const dateInput = document.getElementById('exitDate');
+            
+            // Chargement de la date sauvegardée ou défaut
+            const savedDate = localStorage.getItem('exitDate90');
+            if (savedDate) {
+                dateInput.value = savedDate;
+            } else {
+                // Date par défaut : 17 février 2026
+                const defaultDate = new Date(2026, 1, 17);
+                dateInput.value = formatDateYMD(defaultDate);
+            }
+            
+            calculateAndDisplay();
+            
+            // Sauvegarder et recalculer à chaque changement
+            dateInput.addEventListener('change', function() {
+                localStorage.setItem('exitDate90', this.value);
+                calculateAndDisplay();
+            });
+            
+            // Mise à jour automatique chaque minute (utile pour voir les jours restants évoluer)
+            setInterval(calculateAndDisplay, 60000);
+            
+            // Rafraîchissement plus précis à minuit
+            const now = new Date();
+            const msUntilMidnight = (24 - now.getHours()) * 3600000 - now.getMinutes() * 60000 - now.getSeconds() * 1000;
+            setTimeout(() => {
+                calculateAndDisplay();
+                setInterval(calculateAndDisplay, 86400000);
+            }, msUntilMidnight);
+        }
+        
+        init();
+    </script>
+</body>
+</html>
+
