@@ -5,6 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>90 Jours - Compteur de territoire</title>
     <style>
+        :root {
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --accent-color: #3b82f6;
+            --success-color: #22c55e;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --progress-bg: #e2e8f0;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -13,140 +25,78 @@
 
         body {
             min-height: 100vh;
-            background: radial-gradient(circle at 20% 30%, #0a0f1e, #05070f);
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: var(--bg-color);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 1.5rem;
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        /* Animations de particules d'arrière-plan */
-        body::before {
-            content: '';
-            position: absolute;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle at 40% 50%, rgba(59,130,246,0.08) 0%, transparent 50%);
-            animation: rotate 30s linear infinite;
-            pointer-events: none;
-        }
-
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+            color: var(--text-primary);
         }
 
         /* Carte principale */
         .card {
-            position: relative;
-            background: rgba(15, 25, 35, 0.35);
-            backdrop-filter: blur(16px) saturate(180%);
-            border-radius: 2.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            padding: 2.2rem;
-            max-width: 550px;
+            background-color: var(--card-bg);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            max-width: 500px;
             width: 100%;
-            box-shadow: 0 30px 50px -20px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255,255,255,0.08);
-            transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-            animation: fadeSlideUp 0.6s ease-out;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(59, 130, 246, 0.3);
-            box-shadow: 0 40px 60px -20px rgba(0, 0, 0, 0.8);
-        }
-
-        @keyframes fadeSlideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Titre avec icône animée */
+        /* Titre */
         h1 {
-            font-size: 2rem;
-            font-weight: 600;
+            font-size: 1.8rem;
+            font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             margin-bottom: 0.5rem;
         }
 
-        .title-gradient {
-            background: linear-gradient(135deg, #ffffff, #a5b4fc, #60a5fa);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
         .plane-icon {
-            display: inline-block;
-            animation: float 3s ease-in-out infinite;
-            font-size: 2rem;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-5px); }
+            font-size: 1.8rem;
         }
 
         .sub {
-            color: rgba(255,255,255,0.6);
+            color: var(--text-secondary);
             font-size: 0.9rem;
-            margin-bottom: 2rem;
-            border-left: 3px solid #3b82f6;
+            margin-bottom: 1.5rem;
             padding-left: 1rem;
-            font-weight: 400;
-            backdrop-filter: blur(4px);
+            border-left: 3px solid var(--accent-color);
         }
 
         /* Zone de sélection date */
         .date-picker {
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
         }
 
         label {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: rgba(255,255,255,0.8);
+            display: block;
+            color: var(--text-secondary);
             font-size: 0.85rem;
-            font-weight: 500;
-            margin-bottom: 0.75rem;
-            letter-spacing: 0.3px;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        input {
+        input[type="date"] {
             width: 100%;
-            padding: 1rem 1.2rem;
-            background: rgba(10, 20, 30, 0.6);
-            border: 1.5px solid rgba(255, 255, 255, 0.15);
-            border-radius: 1.5rem;
-            color: white;
+            padding: 0.85rem 1rem;
+            background-color: #f8fafc;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 0.75rem;
+            color: var(--text-primary);
             font-size: 1rem;
-            font-family: monospace;
-            transition: all 0.3s;
-            cursor: pointer;
+            font-family: inherit;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
 
-        input:hover {
-            border-color: rgba(59, 130, 246, 0.6);
-            background: rgba(10, 20, 30, 0.8);
-        }
-
-        input:focus {
+        input[type="date"]:focus {
             outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
         }
 
         /* Grille des compteurs */
@@ -154,95 +104,128 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 1rem;
-            margin: 2rem 0;
+            margin-bottom: 1.5rem;
         }
 
         .stat-card {
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(8px);
-            border-radius: 1.5rem;
+            background-color: #f8fafc;
+            border-radius: 1rem;
             padding: 1.2rem;
             text-align: center;
-            border: 1px solid rgba(255,255,255,0.06);
-            transition: all 0.2s;
-        }
-
-        .stat-card:hover {
-            border-color: rgba(59,130,246,0.3);
-            background: rgba(0,0,0,0.4);
+            border: 1px solid #e2e8f0;
         }
 
         .stat-label {
             font-size: 0.75rem;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            color: #94a3b8;
-            margin-bottom: 0.5rem;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+            font-weight: 600;
         }
 
         .stat-value {
             font-size: 2.2rem;
             font-weight: 800;
-            background: linear-gradient(135deg, #f1f5f9, #cbd5e1);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            line-height: 1;
+            line-height: 1.1;
+            color: var(--text-primary);
         }
 
         .stat-unit {
             font-size: 0.8rem;
-            color: #64748b;
+            color: var(--text-secondary);
+        }
+
+        /* Barre de progression */
+        .progress-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 10px;
+            background-color: var(--progress-bg);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background-color: var(--success-color);
+            border-radius: 5px;
+            transition: width 0.3s ease, background-color 0.3s ease;
         }
 
         /* Carte centrale des 90 jours */
         .ninety-card {
-            background: linear-gradient(135deg, rgba(59,130,246,0.15), rgba(37,99,235,0.05));
-            border-radius: 1.5rem;
+            background-color: #f8fafc;
+            border-radius: 1rem;
             padding: 1.2rem;
-            margin: 1rem 0 1.5rem;
             text-align: center;
-            border: 1px solid rgba(59,130,246,0.3);
-            backdrop-filter: blur(4px);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 1.5rem;
         }
 
         .ninety-label {
             font-size: 0.8rem;
-            color: #93c5fd;
-            letter-spacing: 1px;
+            color: var(--text-secondary);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            font-weight: 600;
         }
 
         .ninety-value {
             font-size: 1.4rem;
             font-weight: 700;
-            color: white;
+            color: var(--text-primary);
             margin-top: 0.25rem;
+            margin-bottom: 0.5rem;
         }
 
-        .warning {
-            color: #facc15;
+        .status-message {
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            margin-top: 0.5rem;
         }
 
-        .danger {
-            color: #ef4444;
+        .status-success {
+            color: var(--success-color);
+            background-color: rgba(34, 197, 94, 0.1);
         }
 
-        .success {
-            color: #4ade80;
+        .status-warning {
+            color: var(--warning-color);
+            background-color: rgba(245, 158, 11, 0.1);
+        }
+
+        .status-danger {
+            color: var(--danger-color);
+            background-color: rgba(239, 68, 68, 0.1);
         }
 
         hr {
             border: none;
             height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-            margin: 1rem 0;
+            background-color: #e2e8f0;
+            margin: 1.5rem 0 1rem;
         }
 
         .info {
             text-align: center;
-            font-size: 0.7rem;
-            color: #475569;
-            margin-top: 1rem;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
         }
     </style>
 </head>
@@ -250,13 +233,13 @@
     <div class="card">
         <h1>
             <span class="plane-icon">✈️</span>
-            <span class="title-gradient">90 Jours</span>
+            90 Jours
         </h1>
         <div class="sub">Compteur de sortie de territoire • Règle des 90 jours</div>
 
         <div class="date-picker">
-            <label>📅 Date de départ (sortie)</label>
-            <input type="date" id="exitDate" value="2026-02-17">
+            <label for="exitDate">📅 Date de départ (sortie)</label>
+            <input type="date" id="exitDate">
         </div>
 
         <div class="stats-grid">
@@ -272,145 +255,162 @@
             </div>
         </div>
 
-        <div class="ninety-card" id="ninetyCard">
+        <div class="progress-section">
+            <div class="progress-header">
+                <span>Progression</span>
+                <span id="progressText">0 / 90 jours</span>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar-fill" id="progressBarFill"></div>
+            </div>
+        </div>
+
+        <div class="ninety-card">
             <div class="ninety-label">📆 Date limite des 90 jours</div>
             <div class="ninety-value" id="limitDate">—</div>
-            <div class="ninety-label" id="statusMessage" style="margin-top: 8px;">&nbsp;</div>
+            <div id="statusMessage" class="status-message">Veuillez sélectionner une date.</div>
         </div>
 
         <hr>
         <div class="info">
-            ⚡ Mise à jour automatique • Sauvegarde locale • Ne pas dépasser 90 jours
+            Mise à jour automatique • Sauvegarde locale • Ne pas dépasser 90 jours
         </div>
     </div>
 
     <script>
-        function formatDateYMD(date) {
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
+        // Fonction pour normaliser une date à minuit (heure locale)
+        function normalizeDate(date) {
+            const d = new Date(date);
+            d.setHours(0, 0, 0, 0);
+            return d;
+        }
+
+        // Calcule la différence en jours entre deux dates normalisées
+        function diffInDays(date1, date2) {
+            const MS_PER_DAY = 24 * 60 * 60 * 1000;
+            const utc1 = Date.UTC(date1.getFullYear(), date1.getMonth(), date1.getDate());
+            const utc2 = Date.UTC(date2.getFullYear(), date2.getMonth(), date2.getDate());
+            return Math.floor((utc2 - utc1) / MS_PER_DAY);
         }
 
         function formatDateFR(date) {
-            return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+            return date.toLocaleDateString('fr-FR', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
         }
 
         function calculateAndDisplay() {
             const exitDateInput = document.getElementById('exitDate').value;
-            if (!exitDateInput) return;
-
-            const exitDate = new Date(exitDateInput);
-            const today = new Date();
-            
-            // Remise à zéro des heures pour éviter les décalages
-            exitDate.setHours(0, 0, 0, 0);
-            today.setHours(0, 0, 0, 0);
-            
-            // Calcul des jours hors territoire
-            const diffTime = today - exitDate;
-            const daysOut = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-            
-            // Calcul de la date limite (exitDate + 90 jours)
-            const limitDate = new Date(exitDate);
-            limitDate.setDate(exitDate.getDate() + 90);
-            
-            // Jours restants ou dépassement
-            const todayTime = today.getTime();
-            const limitTime = limitDate.getTime();
-            let daysLeft = Math.floor((limitTime - todayTime) / (1000 * 60 * 60 * 24));
-            
-            // Affichage des jours hors territoire
             const daysOutElem = document.getElementById('daysOut');
             const daysLeftElem = document.getElementById('daysLeft');
             const limitDateElem = document.getElementById('limitDate');
             const statusMsgElem = document.getElementById('statusMessage');
-            const ninetyCard = document.getElementById('ninetyCard');
-            
-            // Jours hors territoire (toujours >=0 si date passée)
-            if (daysOut >= 0) {
-                daysOutElem.textContent = daysOut;
-            } else {
-                daysOutElem.textContent = '0';
+            const progressBarFill = document.getElementById('progressBarFill');
+            const progressText = document.getElementById('progressText');
+
+            if (!exitDateInput) {
+                daysOutElem.textContent = '—';
+                daysLeftElem.textContent = '—';
+                limitDateElem.textContent = '—';
+                statusMsgElem.textContent = 'Veuillez sélectionner une date de départ.';
+                statusMsgElem.className = 'status-message';
+                progressBarFill.style.width = '0%';
+                progressText.textContent = '0 / 90 jours';
+                return;
             }
-            
-            // Gestion des 90 jours
-            if (daysLeft > 0) {
-                daysLeftElem.textContent = daysLeft;
-                daysLeftElem.style.color = '#a5f3fc';
-                statusMsgElem.innerHTML = '✅ Dans les temps • Tu peux rester encore';
-                statusMsgElem.className = 'ninety-label success';
-                ninetyCard.style.borderColor = 'rgba(74, 222, 128, 0.5)';
-            } else if (daysLeft === 0) {
-                daysLeftElem.textContent = '0';
-                daysLeftElem.style.color = '#facc15';
-                statusMsgElem.innerHTML = '⚠️ Dernier jour • Attention';
-                statusMsgElem.className = 'ninety-label warning';
-                ninetyCard.style.borderColor = 'rgba(250, 204, 21, 0.7)';
-            } else {
-                const overDays = Math.abs(daysLeft);
-                daysLeftElem.textContent = `-${overDays}`;
-                daysLeftElem.style.color = '#f87171';
-                statusMsgElem.innerHTML = `🔴 DÉPASSEMENT • ${overDays} jour(s) au-delà des 90j`;
-                statusMsgElem.className = 'ninety-label danger';
-                ninetyCard.style.borderColor = 'rgba(239, 68, 68, 0.8)';
-            }
-            
-            // Affichage date limite
+
+            const exitDate = normalizeDate(new Date(exitDateInput));
+            const today = normalizeDate(new Date());
+
+            // Jours hors territoire (seulement si la date de sortie est passée ou aujourd'hui)
+            let daysOut = diffInDays(exitDate, today);
+            if (daysOut < 0) daysOut = 0;
+
+            // Date limite = date de sortie + 90 jours
+            const limitDate = new Date(exitDate);
+            limitDate.setDate(exitDate.getDate() + 90);
             limitDateElem.textContent = formatDateFR(limitDate);
-            
-            // Ajout d'une classe de style sur le nombre de jours hors territoire selon danger
-            if (daysLeft < 0) {
-                daysOutElem.style.background = 'linear-gradient(135deg, #ef4444, #b91c1c)';
-                daysOutElem.style.webkitBackgroundClip = 'text';
-                daysOutElem.style.backgroundClip = 'text';
-            } else if (daysLeft < 15) {
-                daysOutElem.style.background = 'linear-gradient(135deg, #facc15, #eab308)';
-                daysOutElem.style.webkitBackgroundClip = 'text';
-                daysOutElem.style.backgroundClip = 'text';
+
+            // Jours restants (positif = encore de la marge, négatif = dépassement)
+            const daysLeft = diffInDays(today, limitDate);
+
+            // Mise à jour de l'affichage des jours
+            daysOutElem.textContent = daysOut;
+            daysLeftElem.textContent = daysLeft >= 0 ? daysLeft : `-${Math.abs(daysLeft)}`;
+
+            // Calcul de la progression (0% à 100%)
+            let progressPercent = 0;
+            if (daysOut > 0) {
+                progressPercent = Math.min((daysOut / 90) * 100, 100);
+            }
+            progressBarFill.style.width = `${progressPercent}%`;
+            progressText.textContent = `${Math.min(daysOut, 90)} / 90 jours`;
+
+            // Détermination du statut et des couleurs
+            if (daysLeft > 15) {
+                // Dans les temps
+                statusMsgElem.textContent = `✅ Dans les temps • Tu peux rester encore ${daysLeft} jour(s)`;
+                statusMsgElem.className = 'status-message status-success';
+                daysLeftElem.style.color = 'var(--success-color)';
+                progressBarFill.style.backgroundColor = 'var(--success-color)';
+            } else if (daysLeft > 0 && daysLeft <= 15) {
+                // Approche de la limite
+                statusMsgElem.textContent = `⚠️ Attention • Plus que ${daysLeft} jour(s) restant(s)`;
+                statusMsgElem.className = 'status-message status-warning';
+                daysLeftElem.style.color = 'var(--warning-color)';
+                progressBarFill.style.backgroundColor = 'var(--warning-color)';
+            } else if (daysLeft === 0) {
+                // Dernier jour
+                statusMsgElem.textContent = '⚠️ Dernier jour • Tu es à la limite des 90 jours';
+                statusMsgElem.className = 'status-message status-warning';
+                daysLeftElem.style.color = 'var(--warning-color)';
+                progressBarFill.style.backgroundColor = 'var(--warning-color)';
             } else {
-                daysOutElem.style.background = 'linear-gradient(135deg, #f1f5f9, #cbd5e1)';
-                daysOutElem.style.webkitBackgroundClip = 'text';
-                daysOutElem.style.backgroundClip = 'text';
+                // Dépassement
+                const overDays = Math.abs(daysLeft);
+                statusMsgElem.textContent = `🔴 DÉPASSEMENT • Tu es ${overDays} jour(s) au-delà de la limite`;
+                statusMsgElem.className = 'status-message status-danger';
+                daysLeftElem.style.color = 'var(--danger-color)';
+                progressBarFill.style.backgroundColor = 'var(--danger-color)';
             }
         }
-        
-        // Initialisation avec sauvegarde locale
+
+        // Initialisation
         function init() {
             const dateInput = document.getElementById('exitDate');
-            
-            // Chargement de la date sauvegardée ou défaut
             const savedDate = localStorage.getItem('exitDate90');
+
             if (savedDate) {
                 dateInput.value = savedDate;
             } else {
-                // Date par défaut : 17 février 2026
-                const defaultDate = new Date(2026, 1, 17);
-                dateInput.value = formatDateYMD(defaultDate);
+                // Date par défaut : aujourd'hui
+                const today = new Date();
+                const year = today.getFullYear();
+                const month = String(today.getMonth() + 1).padStart(2, '0');
+                const day = String(today.getDate()).padStart(2, '0');
+                dateInput.value = `${year}-${month}-${day}`;
             }
-            
+
             calculateAndDisplay();
-            
-            // Sauvegarder et recalculer à chaque changement
+
+            // Sauvegarde et recalcul à chaque changement
             dateInput.addEventListener('change', function() {
                 localStorage.setItem('exitDate90', this.value);
                 calculateAndDisplay();
             });
-            
-            // Mise à jour automatique chaque minute (utile pour voir les jours restants évoluer)
-            setInterval(calculateAndDisplay, 60000);
-            
-            // Rafraîchissement plus précis à minuit
+
+            // Mise à jour automatique à minuit pour être précis
             const now = new Date();
             const msUntilMidnight = (24 - now.getHours()) * 3600000 - now.getMinutes() * 60000 - now.getSeconds() * 1000;
             setTimeout(() => {
                 calculateAndDisplay();
-                setInterval(calculateAndDisplay, 86400000);
+                setInterval(calculateAndDisplay, 86400000); // Puis une fois par jour
             }, msUntilMidnight);
         }
-        
+
         init();
     </script>
 </body>
 </html>
-
